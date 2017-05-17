@@ -1,0 +1,20 @@
+{
+	"manifest_version": 2,
+	"name": "timekeeper",
+	"version": "0.0.1",
+	
+	"description": "displays time spent being productive",
+
+	"browser_action": {
+		"default_icon": "icon.png"
+	},
+
+	"background" : {
+		"scripts": ["background.js"]
+	},
+
+	"permissions":[
+		"activeTab",
+		"tabs"
+	]
+}
