@@ -2,6 +2,10 @@
 //new Date();
 
 var currentSession = 0;
+
+
+chrome.browserAction.setBadgeText({text: "time"});
+
 initialize();
 
 chrome.browserAction.onClicked.addListener(function(tab){
@@ -14,6 +18,11 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 
 chrome.windows.onFocusChanged.addListener(function(windowId) {
 	console.log(windowId);
+});
+
+// show the popup when the user clicks on the page action
+chrome.pageAction.onClicked.addListener(function(tab) {
+	chrome.pageAction.show(tab.id);
 });
 
 function session(startTime){
@@ -38,7 +47,7 @@ function update(activeInfo){
 	currentSession.endTime = epochTime;
 	var prevSession = currentSession;
 	currentSession = new session(epochTime);
-	alert((prevSession.endTime - prevSession.startTime)/1000);
+	//alert((prevSession.endTime - prevSession.startTime)/1000);
 };
 
 
