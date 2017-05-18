@@ -2,11 +2,12 @@
 	"manifest_version": 2,
 	"name": "timekeeper",
 	"version": "0.0.1",
-	
+
 	"description": "displays time spent being productive",
 
 	"browser_action": {
-		"default_icon": "icon.png"
+		"default_icon": "icon.png",
+		"default_popup": "ui.html"
 	},
 
 	"background" : {

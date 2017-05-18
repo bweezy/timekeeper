@@ -5,10 +5,16 @@ var currentSession = 0;
 initialize();
 
 chrome.browserAction.onClicked.addListener(function(tab){
-	report()});
+	report()
+});
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
-	update(activeInfo)});
+	update(activeInfo)
+});
+
+chrome.windows.onFocusChanged.addListener(function(windowId) {
+	console.log(windowId);
+});
 
 function session(startTime){
 	this.startTime = startTime;
@@ -27,8 +33,6 @@ function initialize(){
 };
 
 
-
-
 function update(activeInfo){
 	var epochTime = Date.now();
 	currentSession.endTime = epochTime;
@@ -44,4 +48,3 @@ function report(){
 		alert(tabs[0].url);
 	})
 };
-
