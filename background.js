@@ -4,11 +4,26 @@
 var currentSession = 0;
 initialize();
 
-chrome.browserAction.onClicked.addListener(function(tab){
-	report()});
+var filtWindows = ['normal'];
 
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-	update(activeInfo)});
+chrome.browserAction.onClicked.addListener(report);
+
+chrome.tabs.onActivated.addListener(update);
+
+chrome.windows.onFocusChanged.addListener(windowChange);
+
+	/*function(w){
+	chrome.windows.get(w,false, function(w2) {
+		alert(w2.WindowType);
+	});
+	alert('window Changed');
+});*/
+
+function windowChange(){
+
+	alert('goddamn popup');
+
+};
 
 function session(startTime){
 	this.startTime = startTime;
