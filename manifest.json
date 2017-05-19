@@ -3,12 +3,16 @@
 	"name": "TimeKeeper",
 	"version": "0.0.1",
 
-	"description": "displays time spent being productive",
+	"description": "Displays time spent being productive",
 
 	"browser_action": {
     "default_title": "TimeKeeper",
     "default_popup": "popup.html"
 	},
+
+	"web_accessible_resources": [
+    "bootstrap-table.css"
+	],
 
 	"background" : {
 		"scripts": ["background.js"]

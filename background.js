@@ -38,7 +38,7 @@ function UrlObject(url, category, time){
 
 function initialize(){
 	currentSession = new session(Date.now());
-	alert('initialize');
+	//alert('initialize');
 };
 
 
