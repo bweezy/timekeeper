@@ -10,20 +10,7 @@ chrome.browserAction.onClicked.addListener(report);
 
 chrome.tabs.onActivated.addListener(update);
 
-chrome.windows.onFocusChanged.addListener(windowChange);
-
-	/*function(w){
-	chrome.windows.get(w,false, function(w2) {
-		alert(w2.WindowType);
-	});
-	alert('window Changed');
-});*/
-
-function windowChange(){
-
-	alert('goddamn popup');
-
-};
+chrome.windows.onFocusChanged.addListener(update);
 
 function session(startTime){
 	this.startTime = startTime;
@@ -38,7 +25,7 @@ function UrlObject(url, category, time){
 
 function initialize(){
 	currentSession = new session(Date.now());
-	alert('initialize');
+	console.log('initialize');
 };
 
 
@@ -49,14 +36,14 @@ function update(activeInfo){
 	currentSession.endTime = epochTime;
 	var prevSession = currentSession;
 	currentSession = new session(epochTime);
-	alert((prevSession.endTime - prevSession.startTime)/1000);
+	console.log((prevSession.endTime - prevSession.startTime)/1000);
 };
 
 
 function report(){
 
 	chrome.tabs.query({'active' : true, 'lastFocusedWindow': true}, function(tabs){
-		alert(tabs[0].url);
+		console.log(tabs[0].url);
 	})
 };
 
