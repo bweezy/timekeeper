@@ -2,15 +2,24 @@
 var currentSession = 0;
 initialize();
 
-var filtWindows = ['normal'];
-
 chrome.browserAction.onClicked.addListener(report);
 
-chrome.tabs.onActivated.addListener(update);
+chrome.tabs.onActivated.addListener(function(activeInfo){
+	chrome.tabs.get(activeInfo.tabId, function(t){
+		update(t.url);
+	});
+}); // returns activeInfo of tab that has become active
+	// activeInfo.tabId and activeInfo.windowId
 
-chrome.windows.onFocusChanged.addListener(update);
+chrome.windows.onFocusChanged.addListener(function(windowId){
+	chrome.tabs.query({"active" : true, "currentWindow" : true}, function(t){
+		if(t[0] !== undefined){
+			update(t[0].url);
+		};
+	});
+}); // returns windowId of newly focused window
 
-function session(startTime){
+function Session(startTime){
 	this.startTime = startTime;
 	this.endTime = 0;
 };
@@ -22,19 +31,22 @@ function UrlObject(url, category, time){
 };
 
 function initialize(){
-	currentSession = new session(Date.now());
+	currentSession = new Session(Date.now());
 	console.log('initialize');
 };
 
+function update(url){
 
-
-
-function update(activeInfo){
 	var epochTime = Date.now();
 	currentSession.endTime = epochTime;
 	var prevSession = currentSession;
-	currentSession = new session(epochTime);
-	console.log((prevSession.endTime - prevSession.startTime)/1000);
+	currentSession = new Session(epochTime);
+	elapsed = ((prevSession.endTime - prevSession.startTime)/1000);
+
+	if(elapsed > .1){
+		console.log(elapsed);
+		console.log(url);
+	};
 };
 
 
