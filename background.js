@@ -1,5 +1,3 @@
-//data structure initialization
-//new Date();
 
 var currentSession = 0;
 initialize();
