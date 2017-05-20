@@ -1,6 +1,6 @@
 //Starts a new session, assuming that the extension is being loaded
 //in the extension tab.
-currentSession = new Session(Date.now(), "chrome://extensions/");
+currentSession = new Session(Date.now(), "extensions");
 console.log('initialize');
 var urlDict = {};
 
@@ -30,8 +30,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, info, tab){
 chrome.windows.onFocusChanged.addListener(function(windowId){
 	chrome.tabs.query({"active" : true, "currentWindow" : true}, function(t){
 		if(t[0] !== undefined){
-			urlParser(t[0],url,update);
-			//update(t[0].url);
+			urlParser(t[0].url,update);
 		};
 	});
 });
@@ -71,6 +70,9 @@ function update(url){
 			}else {
 				urlDict[currentSession.url] = elapsed;
 			}
+
+			//log for debugging purposes
+			console.log("url : " + currentSession.url + " elapsed: " + urlDict[currentSession.url]);
 
 			//Start a new session
 			currentSession = new Session(epochTime, url);
