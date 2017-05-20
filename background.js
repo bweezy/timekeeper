@@ -16,7 +16,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo){
 		//But get would return undefined and throw an error
 		//Chrome sees if you check said error and doesn't pollute console with it
 		if (!chrome.runtime.lastError && typeof t !== 'undefined'){
-			update(t.url);
+			urlParser(t.url, update);
 		}
 	});
 }); 
@@ -25,7 +25,8 @@ chrome.tabs.onActivated.addListener(function(activeInfo){
 chrome.windows.onFocusChanged.addListener(function(windowId){
 	chrome.tabs.query({"active" : true, "currentWindow" : true}, function(t){
 		if(t[0] !== undefined){
-			update(t[0].url);
+			urlParser(t[0],url,update);
+			//update(t[0].url);
 		};
 	});
 });
@@ -36,6 +37,13 @@ function Session(startTime, url){
 	this.startTime = startTime;
 	this.endTime = 0;
 };
+
+function urlParser(url, callback){
+	var parser = document.createElement('a');
+	parser.href = url;
+	console.log('parser - ' + parser.hostname);
+	callback(parser.hostname);
+}
 
 //The update function called when a listener is triggered
 function update(url){
