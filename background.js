@@ -1,6 +1,7 @@
 //bruh
-var currentSession = 0;
-initialize();
+currentSession = new Session(Date.now(), "chrome://extensions/");
+console.log('initialize');
+var urlDict = {};
 
 chrome.browserAction.onClicked.addListener(report);
 
@@ -19,41 +20,36 @@ chrome.windows.onFocusChanged.addListener(function(windowId){
 	});
 }); // returns windowId of newly focused window
 
-function Session(startTime){
+function Session(startTime, url){
+	this.url = url;
 	this.startTime = startTime;
 	this.endTime = 0;
-};
-
-function UrlObject(url, category, time){
-	this.url = url;
-	this.category = category || "default";
-	this.time = time || "0";
-};
-
-function initialize(){
-	currentSession = new Session(Date.now());
-	console.log('initialize');
 };
 
 function update(url){
 
 	var epochTime = Date.now();
 	currentSession.endTime = epochTime;
-	var prevSession = currentSession;
-	currentSession = new Session(epochTime);
-	elapsed = ((prevSession.endTime - prevSession.startTime)/1000);
+	elapsed = Math.floor((currentSession.endTime - currentSession.startTime)/1000);
 
-	if(elapsed > .1){
-		console.log(elapsed);
-		console.log(url);
+	if(elapsed > 1 && url !== currentSession.url){
+		if(currentSession.url in urlDict)
+		{
+			urlDict[currentSession.url] += elapsed;
+		}else {
+			urlDict[currentSession.url] = elapsed;
+		}
+		console.log("url : " + currentSession.url + " elapsed: " + urlDict[currentSession.url]);
+		currentSession = new Session(epochTime, url);
 	};
 };
 
 
 function report(){
 
-	chrome.tabs.query({'active' : true, 'lastFocusedWindow': true}, function(tabs){
-		console.log(tabs[0].url);
-	})
+	console.log("Summary of Current Session: ")
+	for(var url in urlDict){
+		console.log("\tURL: " + url + "\tElapsed Time: " + urlDict[url] + "s");
+	}
 };
 
