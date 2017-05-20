@@ -1,8 +1,6 @@
-
-
 //Starts a new session, assuming that the extension is being loaded
 //in the extension tab.
-currentSession = new Session(Date.now(), "chrome://extensions/");
+currentSession = new Session(Date.now(), "extensions");
 console.log('initialize');
 var urlDict = {};
 
@@ -16,16 +14,23 @@ chrome.tabs.onActivated.addListener(function(activeInfo){
 		//But get would return undefined and throw an error
 		//Chrome sees if you check said error and doesn't pollute console with it
 		if (!chrome.runtime.lastError && typeof t !== 'undefined'){
-			update(t.url);
+			urlParser(t.url, update);
 		}
 	});
 }); 
+
+//Updates session when the URL of the tab is updated
+chrome.tabs.onUpdated.addListener(function(tabId, info, tab){
+	if(typeof info.url !== 'undefined'){
+		urlParser(info.url, update);
+	}
+})
 
 //When the window is changed, update with the url of the active tab in the new window
 chrome.windows.onFocusChanged.addListener(function(windowId){
 	chrome.tabs.query({"active" : true, "currentWindow" : true}, function(t){
 		if(t[0] !== undefined){
-			update(t[0].url);
+			urlParser(t[0].url,update);
 		};
 	});
 });
@@ -36,6 +41,12 @@ function Session(startTime, url){
 	this.startTime = startTime;
 	this.endTime = 0;
 };
+
+function urlParser(url, callback){
+	var parser = document.createElement('a');
+	parser.href = url;
+	callback(parser.hostname);
+}
 
 //The update function called when a listener is triggered
 function update(url){
