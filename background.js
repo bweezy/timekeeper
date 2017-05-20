@@ -14,7 +14,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo){
 	chrome.tabs.get(activeInfo.tabId, function(t){
 		//Exiting out of a window would trigger this listener
 		//But get would return undefined and throw an error
-		//Chrome sees if you check said error
+		//Chrome sees if you check said error and doesn't pollute console with it
 		if (!chrome.runtime.lastError && typeof t !== 'undefined'){
 			update(t.url);
 		}
