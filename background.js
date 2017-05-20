@@ -12,7 +12,12 @@ chrome.browserAction.onClicked.addListener(report);
 //When the activated tab is changed, update with the url of the newly activated tab
 chrome.tabs.onActivated.addListener(function(activeInfo){
 	chrome.tabs.get(activeInfo.tabId, function(t){
-		update(t.url);
+		//Exiting out of a window would trigger this listener
+		//But get would return undefined and throw an error
+		//Chrome sees if you check said error
+		if (!chrome.runtime.lastError && typeof t !== 'undefined'){
+			update(t.url);
+		}
 	});
 }); 
 
@@ -43,24 +48,27 @@ function update(url){
 	elapsed = Math.floor((currentSession.endTime - currentSession.startTime)/1000);
 
 	//Log at a 1s granularity, if session was <1 second then don't count it
-	//This needs to be fixed a little, can make the wrong URL be logged
-	if(elapsed > 1 && url !== currentSession.url){
+	if(url !== currentSession.url){
+		if(elapsed > 1){
 
-		//If there is already an entry for this URL, then increment it
-		//otherwise create a new entry
-		if(currentSession.url in urlDict)
-		{
-			urlDict[currentSession.url] += elapsed;
-		}else {
-			urlDict[currentSession.url] = elapsed;
+			//If there is already an entry for this URL, then increment it
+			//otherwise create a new entry
+			if(currentSession.url in urlDict)
+			{
+				urlDict[currentSession.url] += elapsed;
+			}else {
+				urlDict[currentSession.url] = elapsed;
+			}
+
+			//log for debugging purposes
+			console.log("url : " + currentSession.url + " elapsed: " + urlDict[currentSession.url]);
+
+			//Start a new session
+			currentSession = new Session(epochTime, url);
+		}else{
+			currentSession.url = url;
 		}
-
-		//log for debugging purposes
-		console.log("url : " + currentSession.url + " elapsed: " + urlDict[currentSession.url]);
-
-		//Start a new session
-		currentSession = new Session(epochTime, url);
-	};
+	}
 };
 
 //Reports stats on button click
