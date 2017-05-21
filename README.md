@@ -4,6 +4,7 @@ Chrome extension to keep track of productivity
 
 ## Current State
 - Keeps track of sessions using Date.now()
+  - Works with url updating, tab changing, window changing
 
 - Alerts on initialize
 
@@ -11,11 +12,7 @@ Chrome extension to keep track of productivity
 
 ## Needs Implementation
 
-- Session updating needs to be more selective 
-  - For instance, if two tabs have same website open
-- Session needs to update based on URL change
-  - Make sure just the root URL initiates a session change, not subdirectories of the URL
-- Session logging - need to push old sessions into a data structure 
-  - Checking if log for URL already exists
+- UI
+
+- Persistent storage between chrome sessions
   
-There's a lot more to do but those are good for now
