@@ -4,7 +4,7 @@ Chrome extension to keep track of productivity
 
 ## Current State
 - Keeps track of sessions using Date.now()
-  - Works with url updating, tab changing, window changing
+- Works with url updating, tab changing, window changing
 
 - Alerts on initialize
 
@@ -15,4 +15,7 @@ Chrome extension to keep track of productivity
 - UI
 
 - Persistent storage between chrome sessions
-  
+
+- If two windows are open at the same time (multi-tasking), if you are  
+  scrolling through the window that's not focused. The time isn't being
+  counted for that window.
