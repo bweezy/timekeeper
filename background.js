@@ -1,8 +1,21 @@
 //Starts a new session, assuming that the extension is being loaded
 //in the extension tab.
-currentSession = new Session(Date.now(), "extensions");
-console.log('initialize');
-var urlDict = {};
+var urlDict;
+initialize();
+
+function initialize(){
+	currentSession = new Session(Date.now(), 'extensions');
+	console.log('initialize');
+	try{
+		urlDict = JSON.parse(localStorage.getItem('timeKeeperStorage'));
+		if (urlDict == null){
+			urlDict = {};
+		}
+	}catch(e){
+		console.log('First session');
+		urlDict = {};
+	}
+}
 
 //When the extension button is clicked, displays time elapsed for all sessions.
 chrome.browserAction.onClicked.addListener(report);
@@ -80,6 +93,7 @@ function update(url){
 			currentSession.url = url;
 		}
 	}
+	localStorage.setItem('timeKeeperStorage', JSON.stringify(urlDict));
 };
 
 //Reports stats on button click
@@ -90,5 +104,9 @@ function report(){
 	for(var url in urlDict){
 		console.log("\tURL: " + url + "\tElapsed Time: " + urlDict[url] + "s");
 	}
+	console.log(JSON.stringify(urlDict));
+	//localStorage.setItem('test',JSON.stringify(urlDict));
+	//testSession2 = JSON.parse(localStorage.getItem('test'));
+	//console.log(testSession2);
 };
 
